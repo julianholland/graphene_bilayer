@@ -13,7 +13,7 @@ h=Atom('H')
 
 twist_data_list=[]
 twist_stat_list=[]
-for size in range(20,21):
+for size in range(11,26):
     twist_data, structure=unique_environment_analysis(size, write_trajectory=True)
     twist_data=np.array(twist_data)
     twist_data_list.append(twist_data)
