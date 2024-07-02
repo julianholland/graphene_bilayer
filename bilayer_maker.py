@@ -114,14 +114,18 @@ def terminate_graphene(hexagon_struc, terminator, distance=1):
 
 def make_layers(structure, layers=2, angle=0, interlayer_distance=3.355):
     height=interlayer_distance
+    old_center_of_mass=structure.get_center_of_mass()
     layered_structure=structure.copy()
     center=layered_structure.get_center_of_mass()
     individual_layer_copy=structure.copy()
     for layer in range(layers-1):
-        individual_layer_copy.positions=individual_layer_copy.positions+[0,0,height]
         individual_layer_copy.rotate(angle, 'z', center)
+        new_center_of_mass=individual_layer_copy.get_center_of_mass()
+        com_difference=old_center_of_mass-new_center_of_mass
+        individual_layer_copy.positions=individual_layer_copy.positions+[0,0,height]
+        individual_layer_copy.positions=individual_layer_copy.positions+com_difference
         layered_structure+=individual_layer_copy
-    
+    view(layered_structure)
     return layered_structure
 
 def make_cell(layered_structure, vacuum=10):

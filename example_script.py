@@ -2,18 +2,19 @@ from twist_analysis import unique_environment_analysis
 from bilayer_maker import run_all
 from ase.atom import Atom
 from ase.atoms import Atoms
+from ase.visualize import view
 import numpy as np
 
 oli=Atoms(symbols=['Li','O'],positions=[[1.96,0,0],[0,0,0]])
 h=Atom('H')
 
-# for i in range(16,21):
-#     a=run_all(i)
+# for i in range(11,21):
+#     a=run_all(i, angle=33)
 #     view(a)
 
 twist_data_list=[]
 twist_stat_list=[]
-for size in range(11,26):
+for size in range(1,26):
     twist_data, structure=unique_environment_analysis(size, write_trajectory=True)
     twist_data=np.array(twist_data)
     twist_data_list.append(twist_data)
