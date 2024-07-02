@@ -9,6 +9,7 @@ from ase.optimize import BFGS
 from ase.io import write, Trajectory
 import matplotlib.pyplot as plt
 from ase.io.trajectory import TrajectoryWriter
+from utils import assign_point_group
 
 # gradients_for_zig_zag
 # y=0x, y=0.57x
@@ -19,7 +20,7 @@ from ase.io.trajectory import TrajectoryWriter
 #make square
 def make_square_graphene(size=20):
     layer=graphene()
-    layer.positions=np.array([1.4,0,0])+layer.positions
+    layer.positions=np.array([0,0,0])+layer.positions
     p=np.array([[1,-1,0],[2,2,0],[0,0,1]])
     orthogonal_structure=make_supercell(layer,p)
     orthogonal_structure.rotate(30, 'z', rotate_cell=True)
@@ -35,26 +36,31 @@ def make_square_graphene(size=20):
     # view(square_struc)
     return square_struc
     
-def make_graphene_hexagon(square_struc):
-    cut_grad=0.57719
-    # cut_grad=0.477
-    nudge=0
-    mask=[]
+def make_graphene_hexagon(square_struc, high_symmetry=False):
     unit_cell_length=square_struc.cell[1,1]
-    a=unit_cell_length*0.28
+    if high_symmetry:
+        cut_grad=0.57719
+        a=unit_cell_length*0.285
+        nudge=2
+    else:
+        cut_grad=0.477
+        a=unit_cell_length*0.23
+        nudge=2
+    mask=[]
+    
     for atom in square_struc:
         # side lengths should be 0.625 of the square to be even 
-        if atom.position[1]+nudge>atom.position[0]*cut_grad+(unit_cell_length-a):
+        if atom.position[1]+nudge>=atom.position[0]*cut_grad+(unit_cell_length-a):
         # if atom.position[1]>cut_grad*atom.position[0]+(unit_cell_length-a):
             # print(atom, 'True')
             mask.append(False)
-        elif atom.position[1]+nudge<-atom.position[0]*cut_grad+(a):
+        elif atom.position[1]-nudge<=-atom.position[0]*cut_grad+(a):
         # elif atom.position[1]<-cut_grad*atom.position[0]+a:
             mask.append(False)
-        elif atom.position[1]+nudge>-atom.position[0]*(cut_grad)+(unit_cell_length+a):
+        elif atom.position[1]+nudge>=-atom.position[0]*(cut_grad)+(unit_cell_length+a):
         # elif atom.position[1]>-cut_grad*atom.position[0]+unit_cell_length+a:
             mask.append(False)
-        elif atom.position[1]+nudge<atom.position[0]*(cut_grad)-a:
+        elif atom.position[1]-nudge<=atom.position[0]*(cut_grad)-a:
         # elif atom.position[1]<cut_grad*atom.position[0]-a:
             mask.append(False)
         else:
@@ -125,7 +131,7 @@ def make_layers(structure, layers=2, angle=0, interlayer_distance=3.355):
         individual_layer_copy.positions=individual_layer_copy.positions+[0,0,height]
         individual_layer_copy.positions=individual_layer_copy.positions+com_difference
         layered_structure+=individual_layer_copy
-    view(layered_structure)
+    # view(layered_structure)
     return layered_structure
 
 def make_cell(layered_structure, vacuum=10):
@@ -143,7 +149,7 @@ def run_all(size, terminator=Atom('H'), terminator_bond_length=1.09, layers=2, a
         layered_structure=make_cell(layered_structure, cell_vacuum)
     # view(layered_structure)
     if verbose > 0:
-        print('atom number:', len(layered_structure), f'({layered_structure.get_chemical_formula()})')
+        print('atom number:', len(layered_structure), f'({layered_structure.get_chemical_formula()})', 'Point Group:', str(assign_point_group(layered_structure)) )
     return layered_structure
 
 

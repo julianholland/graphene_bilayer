@@ -8,8 +8,8 @@ import numpy as np
 oli=Atoms(symbols=['Li','O'],positions=[[1.96,0,0],[0,0,0]])
 h=Atom('H')
 
-# for i in range(11,21):
-#     a=run_all(i, angle=33)
+# for i in range(19,26):
+#     a=run_all(i, angle=0)
 #     view(a)
 
 twist_data_list=[]
