@@ -9,12 +9,12 @@ oli=Atoms(symbols=['Li','O'],positions=[[1.96,0,0],[0,0,0]])
 h=Atom('H')
 
 # for i in range(19,26):
-#     a=run_all(i, angle=0)
-#     view(a)
+#     a=run_all(i, angle=0, high_symmetry=True)
+    # view(a)
 
 twist_data_list=[]
 twist_stat_list=[]
-for size in range(1,26):
+for size in range(19,26):
     twist_data, structure=unique_environment_analysis(size, write_trajectory=True)
     twist_data=np.array(twist_data)
     twist_data_list.append(twist_data)

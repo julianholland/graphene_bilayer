@@ -4,7 +4,7 @@ import numpy as np
 from ase.io.trajectory import TrajectoryWriter
 
 def unique_environment_analysis(size, write_trajectory=False, high_symmetry=False):
-    initial_structure=run_all(size, angle=0, add_cell=True, verbose=1)
+    initial_structure=run_all(size, angle=0, add_cell=True, verbose=1, high_symmetry=high_symmetry)
     chemical_environements_list=[]
     twist_trajectory=[]
     for angle in tqdm(range(0,361)):

@@ -139,7 +139,18 @@ def make_cell(layered_structure, vacuum=10):
     return layered_structure
     
 
-def run_all(size, terminator=Atom('H'), terminator_bond_length=1.09, layers=2, angle=0, interlayer_distance=3.355, add_cell=True, cell_vacuum=10, verbose=1, high_symmetry=False):
+def run_all(size, 
+            terminator=Atom('H'), 
+            terminator_bond_length=1.09, 
+            layers=2, 
+            angle=0, 
+            interlayer_distance=3.355, 
+            add_cell=True, 
+            cell_vacuum=10, 
+            verbose=1, 
+            high_symmetry=False
+            ):
+    
     square_graphene=make_square_graphene(size)
     hexagonal_graphene=make_graphene_hexagon(square_graphene, high_symmetry)
     neat_hexagonal_graphene=trim_dangling_carbons(hexagonal_graphene)
@@ -147,7 +158,6 @@ def run_all(size, terminator=Atom('H'), terminator_bond_length=1.09, layers=2, a
     layered_structure=make_layers(teriminated_structure, layers, angle, interlayer_distance)
     if add_cell:
         layered_structure=make_cell(layered_structure, cell_vacuum)
-        
     if verbose > 0:
         print('atom number:', len(layered_structure), f'({layered_structure.get_chemical_formula()})', 'Point Group:', str(assign_point_group(layered_structure)) )
     return layered_structure
